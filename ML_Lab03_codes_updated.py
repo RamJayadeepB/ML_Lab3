@@ -102,7 +102,7 @@ def evaluate_confusion_matrix(model, X_test, y_test):
 # --------------------------
 if __name__ == "__main__":
     # Load dataset
-    df = pd.read_csv("C:/Users/bramj/OneDrive/Desktop/Crop_recommendation.csv")
+    df = pd.read_csv(r"C:\Users\DELL\Downloads\Crop_recommendation.csv")
     feature_cols = ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']
     target_col = 'label'
 
