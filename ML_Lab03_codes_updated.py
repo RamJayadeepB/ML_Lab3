@@ -1,9 +1,3 @@
-"""
-23CSE301 – Lab 03
-A1–A9 Modular Python Solutions
-
-Dataset: Crop Recommendation (2200 samples, 7 features, 'label' as target)
-"""
 
 import numpy as np
 import pandas as pd
@@ -16,16 +10,16 @@ from sklearn.metrics import confusion_matrix, classification_report, accuracy_sc
 # A1: Intraclass Spread & Interclass Distance
 # --------------------------
 def class_statistics(X, y, class1, class2):
-    X1 = X[y == class1]
-    X2 = X[y == class2]
+    X1 = X[y == class1]  # Samples belonging to class1
+    X2 = X[y == class2]  # Samples belonging to class2
 
-    centroid1 = X1.mean(axis=0)
-    centroid2 = X2.mean(axis=0)
+    centroid1 = X1.mean(axis=0)  # Mean of features for class1
+    centroid2 = X2.mean(axis=0)  # Mean of features for class2
 
-    spread1 = X1.std(axis=0)
-    spread2 = X2.std(axis=0)
+    spread1 = X1.std(axis=0)  # Spread (standard deviation) of class1
+    spread2 = X2.std(axis=0)  # Spread (standard deviation) of class2
 
-    distance = np.linalg.norm(centroid1 - centroid2)
+    distance = np.linalg.norm(centroid1 - centroid2)  # Euclidean distance between centroids
 
     return centroid1, centroid2, spread1, spread2, distance
 
@@ -34,7 +28,7 @@ def class_statistics(X, y, class1, class2):
 # --------------------------
 def feature_histogram(X, feature_index):
     feature = X[:, feature_index]
-    hist, bins = np.histogram(feature, bins=10)
+    hist, bins = np.histogram(feature, bins=10)  # Histogram with 10 bins
     mean = np.mean(feature)
     variance = np.var(feature)
     return hist, bins, mean, variance
@@ -101,26 +95,26 @@ def evaluate_confusion_matrix(model, X_test, y_test):
 # Main Section
 # --------------------------
 if __name__ == "__main__":
-    # Load dataset
+    # Load dataset (CSV file with 2200 samples)
     df = pd.read_csv(r"C:\Users\DELL\Downloads\Crop_recommendation.csv")
     feature_cols = ['N', 'P', 'K', 'temperature', 'humidity', 'ph', 'rainfall']
     target_col = 'label'
 
-    X = df[feature_cols].values
-    y = df[target_col].values
+    X = df[feature_cols].values  # Feature matrix
+    y = df[target_col].values    # Target labels
 
-    # A1 (compare two classes, e.g. rice vs maize)
+    # A1: Compare two classes (e.g., rice vs maize)
     c1, c2, s1, s2, dist = class_statistics(X, y, 'rice', 'maize')
     print("A1 Centroid Distance (rice vs maize):", dist)
 
-    # A2 (histogram for feature 'N')
+    # A2: Histogram for Nitrogen (N) feature
     hist, bins, mean, var = feature_histogram(X, feature_index=0)
     plt.hist(X[:, 0], bins=10, edgecolor='black')
     plt.title("Histogram for Nitrogen (N)")
     plt.show()
     print("A2 Mean (N):", mean, "Variance (N):", var)
 
-    # A3 (Minkowski distances between first two samples)
+    # A3: Minkowski distances between first two samples
     vec1, vec2 = X[0], X[1]
     distances = minkowski_distances(vec1, vec2)
     plt.plot(range(1, 11), distances, marker='o')
@@ -132,18 +126,18 @@ if __name__ == "__main__":
     # A4: Split data
     X_train, X_test, y_train, y_test = split_data(X, y)
 
-    # A5: Train kNN
+    # A5: Train kNN (k=3)
     model_k3 = train_knn(X_train, y_train, k=3)
 
-    # A6: Accuracy
+    # A6: Test Accuracy
     acc = evaluate_accuracy(model_k3, X_test, y_test)
     print("A6 Accuracy (k=3):", acc)
 
-    # A7: Predictions
+    # A7: Predict first 5 samples
     preds = predict_samples(model_k3, X_test)
     print("A7 Predictions (first 5):", preds)
 
-    # A8: Accuracy vs k
+    # A8: Accuracy vs k plot
     ks, accs = knn_accuracy_vs_k(X_train, X_test, y_train, y_test)
     plt.plot(ks, accs, marker='o')
     plt.title("Accuracy vs k")
